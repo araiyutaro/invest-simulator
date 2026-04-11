@@ -32,7 +32,7 @@ Neon Postgres + Drizzle でデータ基盤を固め、市場データ取得層�
   - [x] 01-01-PLAN.md — Drizzle schema + Neon DB provision + schema push (BLOCKING)
   - [x] 01-02-PLAN.md — Env skeleton (.env.example) + runtime env validator (lib/env.ts)
   - [x] 01-03-PLAN.md — iron-session v8 + /login page + /api/auth/{login,logout}
-  - [ ] 01-04-PLAN.md — Next.js 16 proxy.ts auth gate + /dashboard placeholder + end-to-end verify
+  - [x] 01-04-PLAN.md — Next.js 16 proxy.ts auth gate + /dashboard placeholder + end-to-end verify
   - [x] 01-05-PLAN.md — AI Layer SPIKE (agent-sdk vs standard sdk) + decision writeup + promote winner
 **UI hint**: yes
 

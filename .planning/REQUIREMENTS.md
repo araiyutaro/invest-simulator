@@ -48,7 +48,7 @@
 
 ### Security（セキュリティ）
 
-- [ ] **SEC-01**: iron-sessionベースの簡易パスワード保護でダッシュボード全体を覆う
+- [x] **SEC-01**: iron-sessionベースの簡易パスワード保護でダッシュボード全体を覆う
 - [x] **SEC-02**: AnthropicとFinnhubのAPIキーは環境変数で管理しクライアントに露出させない
 - [x] **SEC-03**: DBセッションと平文のAPIキーをSSRで漏らさない
 
@@ -109,7 +109,7 @@
 | OPS-02 | Phase 5 | Pending |
 | OPS-03 | Phase 5 | Pending |
 | OPS-04 | Phase 5 | Pending |
-| SEC-01 | Phase 1 | Pending |
+| SEC-01 | Phase 1 | Complete |
 | SEC-02 | Phase 1 | Complete |
 | SEC-03 | Phase 1 | Complete |
 
