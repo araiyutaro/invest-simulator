@@ -60,7 +60,7 @@
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| AI Layer: Google Gemini API (`@google/generative-ai`) | Function Calling・JSON出力対応、既存有料アカウント活用、無料枠寛大、Vercel serverless互換 | — Pending (SPIKE Phase 1) |
+| AI Layer: Google Gemini API (`@google/generative-ai` v0.24.1) + `gemini-2.5-flash` | Function Calling・JSON出力対応、既存有料アカウント活用、無料枠寛大、Vercel serverless互換 | ✓ Good — Confirmed 2026-04-11 ([.planning/research/AI-LAYER-SPIKE.md](./research/AI-LAYER-SPIKE.md)). Local SPIKE で 2-step function calling (`get_price` → `place_order`) が動作、elapsedMs 4.5–5.3s / ~400 tokens/call。Vercel Preview 検証は human-action checkpoint として残存 |
 | 仮想資金1,000万円 | 銘柄分散がしやすい現実的な規模 | — Pending |
 | 1日1回サイクル | 学習目的、API/トークンコスト削減、シンプル | — Pending |
 | 現物ロングのみ | 思考プロセスの観察に集中、複雑性を抑える | — Pending |

@@ -61,7 +61,7 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- Phase 1: AI Layer選択（Claude Agent SDK vs 標準 SDK）を Vercel Hobby 実測後に確定する必要あり（CRITICAL）
+- Phase 1: AI Layer = `@google/generative-ai` + `gemini-2.5-flash` で確定（Plan 01-05 SPIKE, 2026-04-11）
 - Phase 1: Vercel Fluid Compute の実際のタイムアウト上限を実測確認が必要（IMPORTANT）
 - [Phase 01-foundation]: D-01..D-06 enforced in db/schema.ts; SEC-03 enforced via server-only guard in db/index.ts; drizzle-kit push pattern adopted over generate/migrate for personal project
 
@@ -71,8 +71,8 @@ None yet.
 
 ### Blockers/Concerns
 
-- **AI Layer未確定**: `@anthropic-ai/claude-agent-sdk` vs `@anthropic-ai/sdk` — Vercel Hobby での subprocess 動作未実測。Phase 1 で確定必須。確定前は AgentRunner の実装方針が決まらない
-- **Vercel タイムアウト矛盾**: PITFALLS.md は60秒制限、ARCHITECTURE.md は Fluid Compute で300秒可能と記載。Phase 1 で実測して確定する
+- **Vercel タイムアウト矛盾**: PITFALLS.md は60秒制限、ARCHITECTURE.md は Fluid Compute で300秒可能と記載。Phase 3 Agent Pipeline の実ツール統合時に実測して確定する
+- **Vercel Preview での AI Layer 動作確認**: ローカル実測は完了、Preview 実測は未実施（Plan 01-05 human-action checkpoint 残存）。Plan 04 middleware 完了後 or Phase 3 開始時の実ルートで自動的にカバーされる見込み
 
 ## Session Continuity
 
