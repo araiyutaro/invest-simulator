@@ -2,7 +2,30 @@
 
 **Domain:** AI-driven virtual stock trading simulator (personal dashboard)
 **Researched:** 2026-04-11
-**Confidence:** MEDIUM (data APIs and Claude Agent SDK serverless limitations verified; some JP stock API specifics LOW confidence)
+**Confidence:** MEDIUM (data APIs verified; AI Layer pivoted to Gemini 2026-04-11)
+
+---
+
+## ⚠️ Pivot Note (2026-04-11)
+
+This research was originally conducted assuming **Anthropic Claude** as the AI layer. The project has since pivoted to **Google Gemini API** because:
+- User already holds a paid Google Gemini account
+- Gemini 1.5 Flash / 2.0 Flash have generous free tier (1,500 req/day) that covers 1-run/day operation
+- Anthropic requires a minimum $5 credit charge
+- Gemini is Vercel serverless compatible out of the box (no subprocess concerns)
+
+**Superseded sections below (Anthropic-specific content is historical):**
+- `### AI Layer` — replaced by Gemini section at end of file
+- Alternatives Considered (`@anthropic-ai/sdk`) — no longer relevant
+
+**Current AI Layer decision** (authoritative):
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| `@google/generative-ai` | ^0.24 | Gemini client for daily trading decisions | Function Calling, JSON output, Vercel serverless compatible, free tier covers daily run, existing paid account |
+| Model | `gemini-2.0-flash` | Daily decision model | Good reasoning/cost/speed balance, free tier eligible, 1M context |
+
+**See also:** `.planning/research/AI-LAYER-SPIKE.md` (created in Phase 1 Plan 01-05) for empirical verification.
 
 ---
 

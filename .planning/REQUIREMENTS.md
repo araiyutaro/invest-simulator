@@ -1,7 +1,7 @@
 # Requirements: invest-simulator
 
 **Defined:** 2026-04-11
-**Core Value:** 毎日のClaudeの売買判断と「なぜそう考えたか」の理由を読むことで、投資の思考プロセスを学べること
+**Core Value:** 毎日のAIの売買判断と「なぜそう考えたか」の理由を読むことで、投資の思考プロセスを学べること
 
 ## v1 Requirements
 
@@ -15,12 +15,12 @@
 
 ### AI Agent（Claude実行）
 
-- [ ] **AGENT-01**: Claude Agent SDK または Anthropic SDK（Phase 1で実測確定）を使い、日次でClaudeに売買判断を行わせる
-- [ ] **AGENT-02**: Claudeには価格チャート（テクニカル指標込み）、ファンダメンタル、ニュース要約、現在のポジションを入力として渡す
+- [ ] **AGENT-01**: Google Gemini API（`@google/generative-ai`）を使い、Function Calling経由で日次でAIに売買判断を行わせる
+- [ ] **AGENT-02**: AIには価格チャート（テクニカル指標込み）、ファンダメンタル、ニュース要約、現在のポジションを入力として渡す
 - [ ] **AGENT-03**: ニュースは事前に圧縮（銘柄ごと3ヘッドライン＋1行要約）してトークンコスト爆発を防ぐ
-- [ ] **AGENT-04**: Claudeは現物ロングのみで買い・売り・ホールドを判断し、構造化された出力（ticker, action, quantity, confidence, reasoning）を返す
+- [ ] **AGENT-04**: AIは現物ロングのみで買い・売り・ホールドを判断し、構造化された出力（ticker, action, quantity, confidence, reasoning）を返す
 - [ ] **AGENT-05**: プロンプト・レスポンス・使用データのフルトランスクリプトを `agent_runs` テーブルに保存する
-- [ ] **AGENT-06**: プロンプトインジェクション対策としてニュース本文はXMLデリミタで囲い、Claudeに「信頼できない入力」として指示する
+- [ ] **AGENT-06**: プロンプトインジェクション対策としてニュース本文はデリミタで囲い、AIに「信頼できない入力」として指示する
 - [ ] **AGENT-07**: 1回の実行あたりのトークンコスト推定値をログに記録する
 
 ### Trade Execution（仮想売買執行）

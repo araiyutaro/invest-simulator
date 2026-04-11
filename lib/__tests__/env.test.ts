@@ -12,7 +12,7 @@ vi.mock('server-only', () => ({}))
 
 const VALID_ENV = {
   DATABASE_URL: 'postgresql://user:pass@host/db',
-  ANTHROPIC_API_KEY: 'sk-ant-test-key-value',
+  GEMINI_API_KEY: 'gemini-test-key-value',
   SESSION_SECRET: 'a'.repeat(32), // exactly 32 chars — minimum allowed
   SITE_PASSWORD: 'hunter2',
   CRON_SECRET: 'cron-secret-value',
@@ -44,7 +44,7 @@ describe('lib/env.ts', () => {
     Object.assign(process.env, VALID_ENV)
     const { env } = await import('../env')
     expect(env.DATABASE_URL).toBe(VALID_ENV.DATABASE_URL)
-    expect(env.ANTHROPIC_API_KEY).toBe(VALID_ENV.ANTHROPIC_API_KEY)
+    expect(env.GEMINI_API_KEY).toBe(VALID_ENV.GEMINI_API_KEY)
     expect(env.SESSION_SECRET).toBe(VALID_ENV.SESSION_SECRET)
     expect(env.SITE_PASSWORD).toBe(VALID_ENV.SITE_PASSWORD)
     expect(env.CRON_SECRET).toBe(VALID_ENV.CRON_SECRET)
@@ -56,10 +56,10 @@ describe('lib/env.ts', () => {
     await expect(import('../env')).rejects.toThrow(/DATABASE_URL/)
   })
 
-  it('throws when ANTHROPIC_API_KEY is missing', async () => {
+  it('throws when GEMINI_API_KEY is missing', async () => {
     Object.assign(process.env, VALID_ENV)
-    delete process.env.ANTHROPIC_API_KEY
-    await expect(import('../env')).rejects.toThrow(/ANTHROPIC_API_KEY/)
+    delete process.env.GEMINI_API_KEY
+    await expect(import('../env')).rejects.toThrow(/GEMINI_API_KEY/)
   })
 
   it('throws when SESSION_SECRET is missing', async () => {

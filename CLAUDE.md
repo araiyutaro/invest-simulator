@@ -5,14 +5,14 @@
 
 **invest-simulator**
 
-実在する米国株・日本株の市場データを使って、Claude（AIエージェント）が毎日仮想資金で売買判断を行い、その思考プロセスと運用成果を追跡できる学習用Webアプリ。自分専用の「AI投資観察ダッシュボード」として、Claudeの判断理由を読み解きながら投資の考え方を学ぶことを目的とする。
+実在する米国株・日本株の市場データを使って、AIエージェント（Gemini）が毎日仮想資金で売買判断を行い、その思考プロセスと運用成果を追跡できる学習用Webアプリ。自分専用の「AI投資観察ダッシュボード」として、AIの判断理由を読み解きながら投資の考え方を学ぶことを目的とする。
 
-**Core Value:** 毎日のClaudeの売買判断と「なぜそう考えたか」の理由を読むことで、投資の思考プロセスを学べること。パフォーマンスの良し悪しよりも、判断ログの読みやすさが最優先。
+**Core Value:** 毎日のAIの売買判断と「なぜそう考えたか」の理由を読むことで、投資の思考プロセスを学べること。パフォーマンスの良し悪しよりも、判断ログの読みやすさが最優先。
 
 ### Constraints
 
 - **Tech stack**: Next.js（既存ブートストラップを活用） — 余分な再構築をしない
-- **AI実行**: Claude Agent SDK — ユーザー指定
+- **AI実行**: Google Gemini API (`@google/generative-ai`) — 既存の有料アカウントを活用、無料枠で1日1回運用可能
 - **Budget**: 個人プロジェクト、無料/低コスト枠優先 — API・ホスティング共に
 - **Deployment**: クラウドデプロイ前提（Vercel想定） — どこからでも閲覧したい
 - **Auth**: 簡易パスワード保護のみ — 自分専用、認証プロバイダは過剰
@@ -24,6 +24,17 @@
 <!-- GSD:stack-start source:research/STACK.md -->
 ## Technology Stack
 
+## ⚠️ Pivot Note (2026-04-11)
+- User already holds a paid Google Gemini account
+- Gemini 1.5 Flash / 2.0 Flash have generous free tier (1,500 req/day) that covers 1-run/day operation
+- Anthropic requires a minimum $5 credit charge
+- Gemini is Vercel serverless compatible out of the box (no subprocess concerns)
+- `### AI Layer` — replaced by Gemini section at end of file
+- Alternatives Considered (`@anthropic-ai/sdk`) — no longer relevant
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| `@google/generative-ai` | ^0.24 | Gemini client for daily trading decisions | Function Calling, JSON output, Vercel serverless compatible, free tier covers daily run, existing paid account |
+| Model | `gemini-2.0-flash` | Daily decision model | Good reasoning/cost/speed balance, free tier eligible, 1M context |
 ## Recommended Stack
 ### Core Technologies
 | Technology | Version | Purpose | Why Recommended |
@@ -177,7 +188,9 @@ Architecture not yet mapped. Follow existing patterns found in the codebase.
 <!-- GSD:skills-start source:skills/ -->
 ## Project Skills
 
-No project skills found. Add skills to any of: `.claude/skills/`, `.agents/skills/`, `.cursor/skills/`, or `.github/skills/` with a `SKILL.md` index file.
+| Skill | Description | Path |
+|-------|-------------|------|
+| neon-postgres | Guides and best practices for working with Neon Serverless Postgres. Covers getting started, local development with Neon, choosing a connection method, Neon features, authentication (@neondatabase/auth), PostgREST-style data API (@neondatabase/neon-js), Neon CLI, and Neon's Platform API/SDKs. Use for any Neon-related questions. | `.claude/skills/neon-postgres/SKILL.md` |
 <!-- GSD:skills-end -->
 
 <!-- GSD:workflow-start source:GSD defaults -->

@@ -1,8 +1,23 @@
 # Phase 1: Foundation - Research
 
 **Researched:** 2026-04-11
-**Domain:** Drizzle ORM + Neon Postgres + iron-session v8 + Next.js 16 Proxy + Anthropic SDK
+**Domain:** Drizzle ORM + Neon Postgres + iron-session v8 + Next.js 16 Proxy + Google Gemini API
 **Confidence:** HIGH
+
+---
+
+## ⚠️ Pivot Note (2026-04-11): Anthropic → Gemini
+
+After initial research, the project pivoted from Anthropic Claude to Google Gemini for cost reasons (user has paid Gemini account, Anthropic requires $5 charge). All "Anthropic SDK" / "Claude Agent SDK" content below is **historical and superseded**.
+
+**Current AI Layer** (authoritative):
+- SDK: `@google/generative-ai` ^0.24
+- Model: `gemini-2.0-flash`
+- Function Calling: supported via `FunctionDeclaration` + `functionCalls()` API
+- Vercel compatibility: native (no subprocess, no container)
+- Free tier: 15 RPM / 1,500 RPD (more than enough for 1 run/day)
+
+Pattern 6 and Pattern 7 sections below (Anthropic SDK examples) are retained for historical context but **not used**. The Gemini implementation pattern is documented in `01-05-PLAN.md <interfaces>` block.
 
 ---
 

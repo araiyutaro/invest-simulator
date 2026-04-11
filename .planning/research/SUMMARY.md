@@ -3,7 +3,15 @@
 **Project:** invest-simulator
 **Domain:** AI-driven virtual stock trading simulator with reasoning observability
 **Researched:** 2026-04-11
-**Confidence:** MEDIUM (AI layer and JP stock data have unresolved choices; core stack HIGH)
+**Confidence:** MEDIUM-HIGH (AI layer pivoted to Gemini 2026-04-11; core stack HIGH)
+
+---
+
+## ⚠️ Pivot Note (2026-04-11): Anthropic → Gemini
+
+The AI layer has been changed from **Anthropic Claude** to **Google Gemini** (`@google/generative-ai`, model `gemini-2.0-flash`). Reason: user has an existing paid Gemini account, Gemini free tier easily covers 1-run/day, Gemini function calling is Vercel-serverless compatible.
+
+All Anthropic-specific content below is historical context. The AI Layer conflict section is now moot — Gemini single SDK, no comparison needed.
 
 ---
 

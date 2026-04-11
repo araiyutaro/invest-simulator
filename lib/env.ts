@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 const envSchema = z.object({
   DATABASE_URL: z.string().url().min(1),
-  ANTHROPIC_API_KEY: z.string().min(1),
+  GEMINI_API_KEY: z.string().min(1),
   SESSION_SECRET: z.string().min(32, 'SESSION_SECRET must be at least 32 characters'),
   SITE_PASSWORD: z.string().min(1),
   CRON_SECRET: z.string().min(1),
