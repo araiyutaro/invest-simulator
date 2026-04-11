@@ -709,17 +709,15 @@ await db.insert(decisions)
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **`@anthropic-ai/claude-agent-sdk` + カスタムツールの実装パターン（SPIKE用）**
-   - What we know: SDK自体のquery()は確認済み。MCP経由でカスタムツールを登録できる
-   - What's unclear: MCPなしでインラインカスタムツール（get_price等）を定義する方法が公式ドキュメントに明示されていない
-   - Recommendation: `allowedTools: []` で組み込みツールを全無効にし、hooksでresponseをインターセプトするか、MCPローカルサーバーを使う。SPIKE中に実測で確認
+1. **`@anthropic-ai/claude-agent-sdk` + カスタムツールの実装パターン（SPIKE用）** — **RESOLVED**
+   - 解決策: Plan 01-05 Task 1 の action で SPIKE 実装方針を確定済み。`allowedTools: []` で組み込みツールを全無効化し、hooks で response をインターセプトする方式を採用。MCP経由はオーバーキル
+   - 参照: `.planning/phases/01-foundation/01-05-PLAN.md` Task 1
 
-2. **Vercel PreviewへのSPIKEデプロイ（D-08, D-19）**
-   - What we know: D-19でPreviewはenv未設定でよい（Productionのみ設定）
-   - What's unclear: Previewにenv設定しないとSPIKEのANTHROPIC_API_KEY参照がnullになりSPIKEテスト不能
-   - Recommendation: SPIKEテスト用にPreviewのみ一時的にenv設定し、確認後に削除する
+2. **Vercel PreviewへのSPIKEデプロイ（D-08, D-19）** — **RESOLVED**
+   - 解決策: Plan 01-05 Task 2 の how-to-verify Step B で「Preview env に一時的に ANTHROPIC_API_KEY を設定 → SPIKE 確認 → 確認後削除」の手順が明記されている。D-19 のProduction-only方針は恒久ルール、SPIKE検証は一時例外として扱う
+   - 参照: `.planning/phases/01-foundation/01-05-PLAN.md` Task 2
 
 ---
 
