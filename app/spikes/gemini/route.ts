@@ -64,7 +64,7 @@ export async function GET() {
   const startedAt = Date.now()
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       tools: [
         {
           functionDeclarations: [getPriceDeclaration, placeOrderDeclaration],
@@ -102,7 +102,7 @@ export async function GET() {
 
     return Response.json({
       sdk: 'gemini',
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       elapsedMs: Date.now() - startedAt,
       usage: result.response.usageMetadata ?? null,
       trace,
