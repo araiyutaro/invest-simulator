@@ -50,7 +50,7 @@
 
 - [ ] **SEC-01**: iron-sessionベースの簡易パスワード保護でダッシュボード全体を覆う
 - [ ] **SEC-02**: AnthropicとFinnhubのAPIキーは環境変数で管理しクライアントに露出させない
-- [ ] **SEC-03**: DBセッションと平文のAPIキーをSSRで漏らさない
+- [x] **SEC-03**: DBセッションと平文のAPIキーをSSRで漏らさない
 
 ## v2 Requirements
 
@@ -111,7 +111,7 @@
 | OPS-04 | Phase 5 | Pending |
 | SEC-01 | Phase 1 | Pending |
 | SEC-02 | Phase 1 | Pending |
-| SEC-03 | Phase 1 | Pending |
+| SEC-03 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 30 total
