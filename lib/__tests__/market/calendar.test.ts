@@ -1,4 +1,8 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
+
+// Mock server-only so the module can be imported in test environment
+vi.mock('server-only', () => ({}))
+
 import { isMarketClosed, lastBusinessDay, resolveTargetDate, isWeekendIso } from '@/lib/market/calendar'
 
 describe('market calendar (DATA-04)', () => {
