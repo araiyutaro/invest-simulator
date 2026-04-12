@@ -789,32 +789,38 @@ All test files need to be created. Before implementation:
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> All questions resolved during planning. Each item notes where the final
+> answer lives in the plan set. No open work remains for the planner.
 
 1. **Should `raw_close` carry same value as `close` (split-adjusted) or be NULL when yahoo is source?**
    - What we know: yahoo `chart()` returns only adjusted close. Stooq returns unadjusted close.
    - What's unclear: Whether to do dual-source for a true "raw vs adjusted" comparison (double the JP load), or accept "raw = same as close" as a nullable slot.
    - Recommendation: Store `raw_close = close` from yahoo (essentially means "we trust the adjusted value; raw slot reserved for future unadjusted source"). Document in schema comment. Revisit if PITFALLS Pitfall 2 verification test fails.
+   - **RESOLVED:** Plan 00 Wave 0 SPIKE runs a live AAPL 2020-08-31 split-date experiment and writes `.planning/phases/02-market-data/02-SPIKE-RAW-CLOSE.md`. SPIKE scope is constrained to options (a) "rawClose = close (mirror)" or (b) "rawClose = null unless Stooq fallback fires" — option (c) dual-source is explicitly OUT OF SCOPE for Phase 2 (would require re-planning Plans 04/08). Wave 1 cannot start until SPIKE is committed.
 
 2. **Should news rows be 1:N (multiple rows per ticker/date) or 1:1 with JSONB array?**
    - What we know: D-06 says 1:N rows
    - What's unclear: Nothing — D-06 is locked. Just executing.
    - Recommendation: Follow D-06.
+   - **RESOLVED:** D-06 locked; Plan 02 schema and Plan 07 `upsertNewsSnapshots` implement 1:N rows with no unique constraint (duplicates allowed).
 
 3. **How does Phase 2 cron handle "today is a US trading day but not yet closed" scenario?**
    - What we know: D-19 says use 16:30 NY cutoff
    - What's unclear: Whether cron is expected to produce a row for "today-US" at 09:00 UTC (= 05:00 NY, before close) — answer: NO, should produce a row for "T-1" which is NY yesterday close
    - Recommendation: `lastBusinessDay(US, toZonedTime(now,'NY') - 1 day)` always returns the last fully-closed session. Cover with timezone test.
+   - **RESOLVED:** Plan 03 `calendar.ts` implements `lastBusinessDay()` with NY/JST timezone conversion, and Plan 03 Task 2 (timezone test) covers the 16:30 NY cutoff boundary (D-19).
 
 4. **Does Finnhub `/company-news` free tier return rate-limited data or full news for past 30 days?**
    - What we know: Free tier is "60 calls/min" + "real-time US company news"
    - What's unclear: Historical window limit for news. `[ASSUMED]` 30 days.
    - Recommendation: In plan Wave 0, run one manual call with `from=2026-03-10, to=2026-04-10` and observe response. Shrink to "last 7 days" if longer windows return empty.
+   - **RESOLVED:** Plan 05 Task 1 documents the 30-day assumption as the incremental window and uses 30-day chunks for any backfill (up to 5 chunks = ~150 days) with p-limit throttling to stay under 60 calls/min. Plan 04/05 share the throttle budget. Plan 10 backfill CLI enforces the same budget.
 
 5. **Is `tsx` already installed somewhere or do we need to add it?**
-   - What we know: package.json devDeps does not include `tsx`
-   - What's unclear: Whether user's global pnpm has it
-   - Recommendation: Add `"tsx": "^4"` as devDep in the same task that creates `scripts/backfill.ts`.
+   - What we know: Already resolved — `tsx` was added as a devDep in Phase 1 Plan 01-01 (see `.planning/phases/01-foundation/01-01-SUMMARY.md`).
+   - **RESOLVED:** `tsx` is already installed from Phase 1. No `pnpm add -D tsx` call is needed in Phase 2. Plan 00 Task 1 comment and Plan 10 CLI reference this fact. Any earlier "devDep missing" language in this document is obsolete.
 
 ---
 
