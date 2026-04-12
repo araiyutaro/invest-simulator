@@ -18,32 +18,32 @@ import { findTicker } from '@/config/tickers'
 // ---------------------------------------------------------------------------
 
 const RESPONSE_SCHEMA = {
-  type: SchemaType.OBJECT,
+  type: SchemaType.OBJECT as const,
   properties: {
     market_assessment: {
-      type: SchemaType.STRING,
+      type: SchemaType.STRING as const,
       description: '全体の市場環境分析（日本語）',
     },
     decisions: {
-      type: SchemaType.ARRAY,
+      type: SchemaType.ARRAY as const,
       items: {
-        type: SchemaType.OBJECT,
+        type: SchemaType.OBJECT as const,
         properties: {
-          ticker: { type: SchemaType.STRING },
+          ticker: { type: SchemaType.STRING as const },
           action: {
-            type: SchemaType.STRING,
+            type: SchemaType.STRING as const,
             description: 'One of: BUY, SELL, HOLD',
           },
           quantity: {
-            type: SchemaType.INTEGER,
+            type: SchemaType.INTEGER as const,
             description: '売買株数。HOLDの場合は0',
           },
           confidence: {
-            type: SchemaType.STRING,
+            type: SchemaType.STRING as const,
             description: 'One of: high, medium, low',
           },
           reasoning: {
-            type: SchemaType.STRING,
+            type: SchemaType.STRING as const,
             description: 'この判断の理由（日本語）',
           },
         },

@@ -357,7 +357,7 @@ describe('executeDecisions', () => {
     expect(result.trades).toHaveLength(1)
     expect(result.trades[0].symbol).toBe('7203.T')
     expect(result.skipped).toHaveLength(1)
-    expect(result.skipped[0].symbol ?? result.skipped[0].ticker).toBe('6758.T')
+    expect(result.skipped[0].ticker).toBe('6758.T')
     expect(result.skipped[0].reason).toBe('insufficient_cash')
     expect(result.newCashJpy).toBe(750_000)
   })
