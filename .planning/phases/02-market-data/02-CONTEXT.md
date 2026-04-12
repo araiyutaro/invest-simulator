@@ -223,3 +223,37 @@
 *Phase: 02-market-data*
 *Context gathered: 2026-04-12*
 *All gray areas resolved by Claude's discretion (user delegated)*
+
+---
+
+## Amendment A — 2026-04-12 (post-research)
+
+**Trigger:** `02-RESEARCH.md` で判明した critical finding 2 件により、D-11 / D-23 の一部が実装不能となったため修正。
+
+### Changed Decisions
+
+- **D-11 (amended):** 米国株の **OHLCV** は **yahoo-finance2 `.chart()`** で取得する。Finnhub は **news + basicFinancials のみ**に用途限定。
+  - **Reason:** Finnhub `/stock/candle` は 2024 年から premium-only（GitHub issue #534, #58）。free tier では 403 が返る。yahoo-finance2 は US ticker を `.T` suffix 無しで処理でき、US/JP 両方を単一 SDK で扱える。
+- **D-23 (amended):** 100 営業日バックフィルは **yahoo-finance2 `.chart()` の `period1`/`period2` 範囲指定**で 1 call/ticker × 10 ticker = 10 calls（OHLCV 部分）に大幅削減される。news は Finnhub `/company-news` を 5 日ウィンドウで分割（約 20 calls/ticker × 10 = 200 calls）、fundamentals は 1 call/ticker × 10 = 10 calls。**OHLCV の rate limit 懸念は解消**（yahoo-finance2 は公式 SLA 無しだがセルフスロットル p-limit 2-3 並列で安全）。バックフィル全体は引き続き Vercel 60 秒制限超過の可能性があるため CLI 実行を維持（D-23 の本意）。
+- **D-12 (unchanged, reinforced):** 日本株 primary は yahoo-finance2（ただし `.historical()` ではなく **`.chart()`** を使用。`.historical()` は 2024 mid 以降「User not logged in」エラーで非推奨）。Stooq fallback は変更なし。
+- **D-08 (amended / pending SPIKE):** `raw_close` カラムは追加するが、その値の決定は **Wave 0 SPIKE** で実験的に確定する。3 つの候補:
+  - (a) yahoo `.chart()` の adjusted close と同値を `raw_close` にも格納（構造維持のみ、split 検知不可）
+  - (b) NULL を許容し、Stooq を secondary として dual-source 取得したときのみ Stooq の unadjusted 値を入れる
+  - (c) Stooq を **primary raw source** として US/JP 両方で `raw_close` を必ず取得（無料、rate limit なし、ただしネットワーク依存増）
+  - **SPIKE 検証対象:** TSLA 2022-08-25 3:1 split または AAPL 2020-08-31 4:1 split で yahoo vs Stooq の close 値の差を観測し、実装コスト対効果で 1 つ選ぶ
+- **D-14 (unchanged):** ログは stdout + `source` カラムのみ、ただし Stooq fallback 判定に **content-type check** を追加（Stooq はエラー時に HTML を 200 で返す既知クセあり）。
+
+### New Decisions
+
+- **D-28:** ticker 対応表は **yahoo-finance2 native format を正とする**。`config/tickers.ts` の `symbol` フィールドは yahoo 形式（US: `AAPL`, JP: `7203.T`）。Stooq に投げる際のみ内部で変換（US: `aapl.us`, JP: `7203.jp`）。変換関数 `toStooqSymbol(ticker)` を `lib/market/stooq.ts` に置く。
+- **D-29:** Wave 0 に **`00-SPIKE-PLAN.md`**（または `01-PLAN.md` 先頭タスク）として `raw_close` 実験タスクを配置。SPIKE レポートは `.planning/phases/02-market-data/02-SPIKE-RAW-CLOSE.md` に記録し、結果を D-08 (amended) に反映してから残り Plan の実装に進む。
+
+### Unchanged (still valid)
+
+- D-01〜D-07, D-09, D-10, D-15〜D-22, D-24〜D-27, D-28 (new), D-29 (new)
+- ニュース保存戦略、マーケットカレンダー、FX レート、バックフィル方針、エントリポイント構造
+
+---
+
+*Amendment A gathered: 2026-04-12*
+*Research findings source: 02-RESEARCH.md §Critical Findings*
