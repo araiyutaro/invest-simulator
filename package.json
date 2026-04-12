@@ -10,7 +10,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "backfill": "tsx --conditions react-server scripts/backfill.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
