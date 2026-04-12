@@ -12,6 +12,7 @@ import { DashboardHeader } from './components/DashboardHeader'
 import { PerformanceGrid } from './components/PerformanceGrid'
 import { PortfolioChartClient } from './components/PortfolioChartClient'
 import { PositionsTable } from './components/PositionsTable'
+import { TradeTimeline } from './components/TradeTimeline'
 
 import { calculateMetrics, normalizeToPercent } from '@/lib/dashboard/metrics'
 import {
@@ -19,6 +20,7 @@ import {
   getPerformanceData,
   getPortfolioId,
   getPositionsWithPrices,
+  getTimelineData,
 } from '@/lib/dashboard/queries'
 
 export default async function DashboardPage() {
@@ -38,10 +40,11 @@ export default async function DashboardPage() {
     )
   }
 
-  const [chartData, positionData, perfData] = await Promise.all([
+  const [chartData, positionData, perfData, timelineData] = await Promise.all([
     getChartData(portfolioId),
     getPositionsWithPrices(portfolioId),
     getPerformanceData(portfolioId),
+    getTimelineData(portfolioId, 20, 0),
   ])
 
   const metrics = calculateMetrics(perfData)
@@ -100,9 +103,10 @@ export default async function DashboardPage() {
           <h2 className="text-xl font-semibold text-slate-100 mb-6">
             トレードタイムライン
           </h2>
-          <p className="text-sm text-slate-400">
-            タイムラインは Plan 04 で実装
-          </p>
+          <TradeTimeline
+            initialDays={timelineData}
+            portfolioId={portfolioId}
+          />
         </section>
       </main>
     </>
