@@ -13,6 +13,7 @@ import {
   timestamp,
   boolean,
   integer,
+  bigint,
   unique,
 } from 'drizzle-orm/pg-core'
 
@@ -141,7 +142,12 @@ export const priceSnapshots = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     symbol: text('symbol').notNull(),
     priceDate: date('price_date').notNull(),
-    close: numeric('close', { precision: 18, scale: 4 }).notNull(),
+    open: numeric('open', { precision: 18, scale: 4 }),
+    high: numeric('high', { precision: 18, scale: 4 }),
+    low: numeric('low', { precision: 18, scale: 4 }),
+    close: numeric('close', { precision: 18, scale: 4 }),
+    rawClose: numeric('raw_close', { precision: 18, scale: 4 }),
+    volume: bigint('volume', { mode: 'bigint' }),
     currency: text('currency').notNull(),
     fxRateToJpy: numeric('fx_rate_to_jpy', { precision: 12, scale: 6 }),
     marketClosed: boolean('market_closed').notNull().default(false),
@@ -150,6 +156,43 @@ export const priceSnapshots = pgTable(
     fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [unique().on(t.symbol, t.priceDate)]
+)
+
+// ----------------------------------------------------------------------------
+// news_snapshots
+// ----------------------------------------------------------------------------
+
+export const newsSnapshots = pgTable('news_snapshots', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  symbol: text('symbol').notNull(),
+  newsDate: date('news_date').notNull(),
+  headline: text('headline').notNull(),
+  url: text('url'),
+  sourceDomain: text('source_domain'),
+  publishedAt: timestamp('published_at', { withTimezone: true }),
+  raw: jsonb('raw').notNull(),
+  fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
+// ----------------------------------------------------------------------------
+// fundamentals_snapshots
+// ----------------------------------------------------------------------------
+
+export const fundamentalsSnapshots = pgTable(
+  'fundamentals_snapshots',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    symbol: text('symbol').notNull(),
+    asOfDate: date('as_of_date').notNull(),
+    peRatio: numeric('pe_ratio', { precision: 12, scale: 4 }),
+    eps: numeric('eps', { precision: 12, scale: 4 }),
+    marketCap: numeric('market_cap', { precision: 24, scale: 2 }),
+    week52High: numeric('week_52_high', { precision: 18, scale: 4 }),
+    week52Low: numeric('week_52_low', { precision: 18, scale: 4 }),
+    raw: jsonb('raw').notNull(),
+    fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique().on(t.symbol, t.asOfDate)]
 )
 
 // ----------------------------------------------------------------------------
