@@ -1,32 +1,108 @@
+// Dashboard page — Server Component that fetches all dashboard data in
+// parallel, computes performance metrics, and renders the 4 primary
+// sections (Plan 04-03 Task 3).
+//
+// Rule 3 deviation: Next.js 16 disallows `dynamic(..., { ssr: false })` in
+// Server Components. The SSR-bailout lives in PortfolioChartClient /
+// AllocationChartClient (client wrappers). See node_modules/next/dist/
+// docs/01-app/02-guides/lazy-loading.md line 94.
+
+import { AllocationChartClient } from './components/AllocationChartClient'
 import { DashboardHeader } from './components/DashboardHeader'
+import { PerformanceGrid } from './components/PerformanceGrid'
+import { PortfolioChartClient } from './components/PortfolioChartClient'
+import { PositionsTable } from './components/PositionsTable'
+
+import { calculateMetrics, normalizeToPercent } from '@/lib/dashboard/metrics'
+import {
+  getChartData,
+  getPerformanceData,
+  getPortfolioId,
+  getPositionsWithPrices,
+} from '@/lib/dashboard/queries'
 
 export default async function DashboardPage() {
+  let portfolioId: string
+  try {
+    portfolioId = await getPortfolioId()
+  } catch {
+    return (
+      <>
+        <DashboardHeader />
+        <main className="max-w-7xl mx-auto px-8 py-12">
+          <p className="text-sm text-slate-400">
+            ポートフォリオが見つかりません。最初のエージェント実行後に表示されます。
+          </p>
+        </main>
+      </>
+    )
+  }
+
+  const [chartData, positionData, perfData] = await Promise.all([
+    getChartData(portfolioId),
+    getPositionsWithPrices(portfolioId),
+    getPerformanceData(portfolioId),
+  ])
+
+  const metrics = calculateMetrics(perfData)
+  const portfolioChart = normalizeToPercent(chartData.portfolio)
+  const spyChart = normalizeToPercent(chartData.spy)
+  const topixChart = normalizeToPercent(chartData.topix)
+
+  const positionsMarketValue = positionData.positions.reduce(
+    (sum, position) =>
+      sum + position.currentPrice * position.quantity,
+    0
+  )
+  const totalValue = positionsMarketValue + positionData.cash
+
   return (
     <>
       <DashboardHeader />
       <main className="max-w-7xl mx-auto px-8 py-12 space-y-12">
-        {/* Section 1: パフォーマンス指標カード (DASH-04) */}
         <section aria-label="パフォーマンス指標">
-          <h2 className="text-xl font-semibold text-slate-100 mb-6">パフォーマンス</h2>
-          <p className="text-sm text-slate-400">指標データは Plan 03 で実装</p>
+          <h2 className="text-xl font-semibold text-slate-100 mb-6">
+            パフォーマンス
+          </h2>
+          <PerformanceGrid metrics={metrics} />
         </section>
 
-        {/* Section 2: ポートフォリオ推移チャート (DASH-01) */}
         <section aria-label="ポートフォリオ推移">
-          <h2 className="text-xl font-semibold text-slate-100 mb-6">ポートフォリオ推移</h2>
-          <p className="text-sm text-slate-400">チャートは Plan 03 で実装</p>
+          <h2 className="text-xl font-semibold text-slate-100 mb-6">
+            ポートフォリオ推移
+          </h2>
+          <PortfolioChartClient
+            portfolio={portfolioChart}
+            spy={spyChart}
+            topix={topixChart}
+          />
         </section>
 
-        {/* Section 3: ポジション一覧 + 配分パイチャート (DASH-02) */}
         <section aria-label="ポジション">
-          <h2 className="text-xl font-semibold text-slate-100 mb-6">ポジション</h2>
-          <p className="text-sm text-slate-400">ポジションテーブルは Plan 03 で実装</p>
+          <h2 className="text-xl font-semibold text-slate-100 mb-6">
+            ポジション
+          </h2>
+          <div className="flex flex-col lg:flex-row gap-8">
+            <div className="lg:w-3/5">
+              <PositionsTable
+                positions={positionData.positions}
+                cash={positionData.cash}
+                totalValue={totalValue}
+              />
+            </div>
+            <div className="lg:w-2/5">
+              <AllocationChartClient data={positionData.allocations} />
+            </div>
+          </div>
         </section>
 
-        {/* Section 4: トレードタイムライン (DASH-03) */}
         <section aria-label="トレードタイムライン">
-          <h2 className="text-xl font-semibold text-slate-100 mb-6">トレードタイムライン</h2>
-          <p className="text-sm text-slate-400">タイムラインは Plan 04 で実装</p>
+          <h2 className="text-xl font-semibold text-slate-100 mb-6">
+            トレードタイムライン
+          </h2>
+          <p className="text-sm text-slate-400">
+            タイムラインは Plan 04 で実装
+          </p>
         </section>
       </main>
     </>
