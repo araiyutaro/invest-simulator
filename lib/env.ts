@@ -7,6 +7,7 @@ const envSchema = z.object({
   SESSION_SECRET: z.string().min(32, 'SESSION_SECRET must be at least 32 characters'),
   SITE_PASSWORD: z.string().min(1),
   CRON_SECRET: z.string().min(1),
+  FINNHUB_API_KEY: z.string().min(1),
 })
 
 const parsed = envSchema.safeParse(process.env)

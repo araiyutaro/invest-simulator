@@ -16,6 +16,7 @@ const VALID_ENV = {
   SESSION_SECRET: 'a'.repeat(32), // exactly 32 chars — minimum allowed
   SITE_PASSWORD: 'hunter2',
   CRON_SECRET: 'cron-secret-value',
+  FINNHUB_API_KEY: 'finnhub-test-key-value',
 }
 
 describe('lib/env.ts', () => {
