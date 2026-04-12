@@ -3,17 +3,29 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 // Mock server-only to avoid error in test environment
 vi.mock('server-only', () => ({}))
 
+// Mock env to avoid validation errors from transitive imports
+vi.mock('@/lib/env', () => ({
+  env: { FINNHUB_API_KEY: 'test-key' },
+}))
+
+// Mock DB to avoid connection errors from transitive persist imports
+vi.mock('@/db', () => ({
+  db: {},
+}))
+
 // Mock all downstream modules
 vi.mock('@/lib/market/yahoo')
 vi.mock('@/lib/market/finnhub')
 vi.mock('@/lib/market/stooq')
 vi.mock('@/lib/market/persist')
+vi.mock('@/lib/market/calendar')
 
 const { fetchMarketData } = await import('@/lib/market/orchestrator')
 const yahoo = await import('@/lib/market/yahoo')
 const stooq = await import('@/lib/market/stooq')
 const finnhub = await import('@/lib/market/finnhub')
 const persist = await import('@/lib/market/persist')
+const calendar = await import('@/lib/market/calendar')
 
 function makeOhlcv(symbol: string, dates: readonly string[]) {
   return dates.map((d) => ({
@@ -35,6 +47,11 @@ function makeOhlcv(symbol: string, dates: readonly string[]) {
 describe('fetchMarketData orchestrator (DATA-01..05)', () => {
   beforeEach(() => {
     vi.resetAllMocks()
+
+    // Default calendar mock — not a holiday, returns a single date for incremental
+    vi.mocked(calendar.isMarketClosed).mockReturnValue(false)
+    vi.mocked(calendar.resolveTargetDate).mockReturnValue(['2026-04-10'])
+
     // Default persist mocks — resolve without hitting DB
     vi.mocked(persist.upsertPriceSnapshots).mockResolvedValue(0)
     vi.mocked(persist.upsertNewsSnapshots).mockResolvedValue(0)
@@ -210,6 +227,11 @@ describe('fetchMarketData orchestrator (DATA-01..05)', () => {
   })
 
   it('backfill mode fetches multiple days', async () => {
+    vi.mocked(calendar.resolveTargetDate).mockReturnValue([
+      '2026-04-08',
+      '2026-04-09',
+      '2026-04-10',
+    ])
     vi.mocked(yahoo.fetchOhlcvYahoo).mockImplementation(
       async (s: string) =>
         makeOhlcv(s, ['2026-04-08', '2026-04-09', '2026-04-10']),
@@ -223,6 +245,42 @@ describe('fetchMarketData orchestrator (DATA-01..05)', () => {
 
     expect(res.ok.length).toBeGreaterThanOrEqual(10)
     expect(res.failed).toHaveLength(0)
+  })
+
+  it('US holiday writes market_closed rows, JP still fetches (D-18)', async () => {
+    // 2026-01-19 is MLK Day (US holiday, but JP is open)
+    vi.mocked(calendar.isMarketClosed).mockImplementation(
+      (market: string, _date: string) => market === 'US',
+    )
+    vi.mocked(yahoo.fetchOhlcvYahoo).mockImplementation(
+      async (s: string) => makeOhlcv(s, ['2026-01-19']),
+    )
+
+    const res = await fetchMarketData({
+      mode: 'incremental',
+      now: new Date('2026-01-19T22:00:00Z'),
+    })
+
+    // US tickers should be in marketClosed
+    expect(res.marketClosed).toContain('AAPL')
+    expect(res.marketClosed).toContain('MSFT')
+    expect(res.marketClosed).toContain('SPY')
+    expect(res.marketClosed).toHaveLength(6) // 6 US tickers
+
+    // writeMarketClosedRow should be called once for US market (batched)
+    expect(persist.writeMarketClosedRow).toHaveBeenCalledTimes(1)
+    expect(persist.writeMarketClosedRow).toHaveBeenCalledWith(
+      'US',
+      '2026-01-19',
+      expect.arrayContaining(['AAPL', 'MSFT']),
+    )
+
+    // JP tickers should still succeed
+    expect(res.ok).toContain('7203.T')
+    expect(res.ok).toContain('6758.T')
+
+    // Finnhub should NOT be called (US is closed)
+    expect(finnhub.fetchCompanyNews).not.toHaveBeenCalled()
   })
 
   it('news/fundamentals failure does NOT fail the ticker', async () => {
