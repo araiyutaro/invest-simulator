@@ -1,10 +1,11 @@
 ---
 phase: 2
 slug: market-data
-status: draft
-nyquist_compliant: false
+status: ready
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-04-12
+updated: 2026-04-12
 ---
 
 # Phase 2 — Validation Strategy
@@ -36,35 +37,30 @@ created: 2026-04-12
 
 ## Per-Task Verification Map
 
-_Populated during planning. Each PLAN task must map to at least one row here._
+_Aligned with the final 11-plan structure. Every task from every PLAN.md has a row here._
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 2-00-01 | 00 | 0 | — | — | SPIKE: determine raw_close semantics (yahoo vs Stooq TSLA 2022-08 split) | spike | `pnpm tsx scripts/spike-raw-close.ts` | ❌ W0 | ⬜ pending |
-| 2-01-01 | 01 | 1 | DATA-05 | T-2-01 | whitelist rejects non-listed ticker | unit | `pnpm vitest run tickers` | ❌ W0 | ⬜ pending |
-| 2-01-02 | 01 | 1 | DATA-05 | — | isWhitelisted() type narrowing works | unit | `pnpm vitest run tickers` | ❌ W0 | ⬜ pending |
-| 2-02-01 | 02 | 1 | — | — | drizzle migration adds OHLCV cols + news/fundamentals tables | integration | `pnpm drizzle-kit push && pnpm vitest run schema` | ❌ W0 | ⬜ pending |
-| 2-03-01 | 03 | 2 | DATA-04 | — | isWeekend() + holiday list skips JP/US closed days | unit | `pnpm vitest run calendar` | ❌ W0 | ⬜ pending |
-| 2-03-02 | 03 | 2 | DATA-04 | T-2-02 | timezone: NY close vs Tokyo close resolution | unit | `pnpm vitest run calendar` | ❌ W0 | ⬜ pending |
-| 2-04-01 | 04 | 2 | DATA-01, DATA-03 | — | yahoo-finance2 chart() returns parsed OHLCV for US ticker (mocked) | unit | `pnpm vitest run yahoo` | ❌ W0 | ⬜ pending |
-| 2-04-02 | 04 | 2 | DATA-01 | — | yahoo chart() empty response triggers stale-data error | unit | `pnpm vitest run yahoo` | ❌ W0 | ⬜ pending |
-| 2-05-01 | 05 | 2 | DATA-01 | — | Finnhub companyNews parses (fixture) | unit | `pnpm vitest run finnhub` | ❌ W0 | ⬜ pending |
-| 2-05-02 | 05 | 2 | DATA-01 | — | Finnhub basicFinancials parses (fixture) | unit | `pnpm vitest run finnhub` | ❌ W0 | ⬜ pending |
-| 2-05-03 | 05 | 2 | — | T-2-03 | Finnhub 401 (bad key) → typed error | unit | `pnpm vitest run finnhub` | ❌ W0 | ⬜ pending |
-| 2-06-01 | 06 | 3 | DATA-02 | — | yahoo failure → Stooq fallback triggered (mocked) | integration | `pnpm vitest run fallback` | ❌ W0 | ⬜ pending |
-| 2-06-02 | 06 | 3 | DATA-02 | — | Stooq HTML-200 error detection (content-type check) | unit | `pnpm vitest run stooq` | ❌ W0 | ⬜ pending |
-| 2-06-03 | 06 | 3 | DATA-02 | — | Stooq CSV parser handles 6-col rows | unit | `pnpm vitest run stooq` | ❌ W0 | ⬜ pending |
-| 2-07-01 | 07 | 3 | DATA-03, D-03 | — | FX rate (JPY=X) upsert to price_snapshots assetClass='fx' | integration | `pnpm vitest run fx` | ❌ W0 | ⬜ pending |
-| 2-08-01 | 08 | 4 | DATA-03 | — | orchestrator writes price_snapshots row (upsert, idempotent) | integration | `pnpm vitest run orchestrator` | ❌ W0 | ⬜ pending |
-| 2-08-02 | 08 | 4 | DATA-04 | — | holiday run creates market_closed=true row | integration | `pnpm vitest run orchestrator` | ❌ W0 | ⬜ pending |
-| 2-08-03 | 08 | 4 | DATA-05 | T-2-01 | non-whitelisted ticker short-circuits before API call | integration | `pnpm vitest run orchestrator` | ❌ W0 | ⬜ pending |
-| 2-09-01 | 09 | 5 | — | T-2-04 | `/api/cron/fetch-market-data` requires CRON_SECRET header | integration | `pnpm vitest run route` | ❌ W0 | ⬜ pending |
-| 2-09-02 | 09 | 5 | DATA-03 | — | route returns failure summary JSON shape | integration | `pnpm vitest run route` | ❌ W0 | ⬜ pending |
-| 2-10-01 | 10 | 5 | — | — | `scripts/backfill.ts` runs 1-ticker backfill end-to-end against real Neon dev | manual | `pnpm tsx scripts/backfill.ts --symbol AAPL --days 5` | ❌ W0 | ⬜ manual |
+| 02-00-01 | 00 | 0 | — | — | SPIKE: resolve D-08 raw_close semantics (AAPL 2020-08-31 split); option (a) or (b) only | spike | `pnpm tsx scripts/spike-raw-close.ts` | ❌ W0 | ⬜ pending |
+| 02-00-02 | 00 | 0 | — | — | Decision doc records (a) or (b) with numeric evidence | doc | `test -s .planning/phases/02-market-data/02-SPIKE-RAW-CLOSE.md && grep -qE "\\(a\\)\|\\(b\\)" .planning/phases/02-market-data/02-SPIKE-RAW-CLOSE.md` | ❌ W0 | ⬜ pending |
+| 02-00-03 | 00 | 0 | — | — | Offline fixtures captured for yahoo/Finnhub/Stooq (US + JP + error HTML) | fixture | `pnpm tsx scripts/capture-fixtures.ts` | ❌ W0 | ⬜ pending |
+| 02-01-01 | 01 | 1 | DATA-05 | T-2-01 | `TICKERS` whitelist literal + `env.FINNHUB_API_KEY` + `env.CRON_SECRET` added | unit | `pnpm vitest run tickers --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-01-02 | 01 | 1 | DATA-05 | T-2-01 | `isWhitelisted(s)` type-narrows; `getTicker('XYZ')` throws `WhitelistViolationError` | unit | `pnpm vitest run whitelist --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-01-03 | 01 | 1 | — | — | Shared `lib/market/types.ts` + `lib/market/errors.ts` exports compile | unit | `pnpm tsc --noEmit` | ❌ W0 | ⬜ pending |
+| 02-02-01 | 02 | 1 | DATA-03 | — | [BLOCKING] drizzle schema adds OHLCV/news/fundamentals tables; `drizzle-kit push` succeeds against dev Neon | integration | `pnpm drizzle-kit push && pnpm vitest run schema --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-02-02 | 02 | 1 | DATA-03 | — | Unique constraints `(symbol, price_date)` and `(symbol, as_of_date)` enforced | integration | `pnpm vitest run schema --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-03-01 | 03 | 2 | DATA-04 | T-2-02 | `isMarketClosed()` + holiday list + `lastBusinessDay()` with NY/JST TZ; D-19 16:30 NY cutoff | unit | `pnpm vitest run calendar --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-04-01 | 04 | 2 | DATA-01, DATA-03 | — | `fetchOhlcvYahoo` + `fetchFxUsdJpy` parse fixture; empty/stale triggers error; p-limit throttle | unit | `pnpm vitest run yahoo --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-05-01 | 05 | 2 | DATA-01 | T-2-03 | `fetchCompanyNews` + `fetchBasicFinancials` parse fixtures; JP/non-whitelist short-circuit; 401 → FinnhubError; `vi.stubGlobal('fetch')` test strategy | unit | `pnpm vitest run finnhub --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-06-01 | 06 | 3 | DATA-02 | — | `fetchOhlcvStooq` parses CSV fixture; content-type guard rejects HTML (error fixture) | unit | `pnpm vitest run stooq --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-07-01 | 07 | 4 | DATA-03 | — | `upsertPriceSnapshots` / `upsertFundamentalsSnapshots` use `sql\`excluded.*\`` pattern; idempotent against live Neon dev | integration | `pnpm vitest run persist --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-08-01 | 08 | 5 | DATA-01, DATA-02, DATA-03, DATA-04, DATA-05 | T-2-01 | `fetchMarketData()` composes all primitives; D-13 three fallback triggers; D-15 per-ticker isolation; holiday writes market_closed row; non-whitelist filtered out; budget ≤280 lines or helpers extracted | integration | `pnpm vitest run orchestrator --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
+| 02-09-01 | 09 | 6 | DATA-03 | T-2-04 | `/api/cron/fetch-market-data` requires `Authorization: Bearer ${CRON_SECRET}`; proxy.ts bypass verified at line covering `/api/cron/*`; unauthenticated request reaches handler and returns 401 | integration | `pnpm vitest run route --reporter=dot --no-coverage && pnpm tsc --noEmit && grep -n "api/cron" proxy.ts` | ❌ W0 | ⬜ pending |
+| 02-10-01 | 10 | 6 | — | — | `scripts/backfill.ts` runs 1-ticker backfill end-to-end against real Neon dev; rate-limit budget honored | manual | `pnpm tsx scripts/backfill.ts --symbol AAPL --days 5` | ❌ W0 | ⬜ manual |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
-*All rows marked `❌ W0` require Wave 0 to create the test file or install fixtures.*
+*All rows marked `❌ W0` require Wave 0 to create the test file or install fixtures. `wave_0_complete` flips to `true` at runtime once Plan 00 commits.*
 
 ---
 
@@ -77,7 +73,7 @@ _Populated during planning. Each PLAN task must map to at least one row here._
 - [ ] `lib/__tests__/fixtures/market/finnhub-basicfinancials-aapl.json` — captured basic financials
 - [ ] `lib/__tests__/fixtures/market/stooq-7203-jp.csv` — sample Stooq CSV for fallback test
 - [ ] `lib/__tests__/fixtures/market/stooq-error.html` — sample Stooq error HTML (for content-type detection)
-- [ ] `scripts/spike-raw-close.ts` — Wave 0 SPIKE runner for D-08 decision
+- [ ] `scripts/spike-raw-close.ts` — Wave 0 SPIKE runner for D-08 decision (options a/b only; c out of scope)
 - [ ] `.planning/phases/02-market-data/02-SPIKE-RAW-CLOSE.md` — SPIKE report (MUST close D-08 amendment before Wave 1 starts)
 
 *Wave 0 blocks all subsequent waves. No Wave 1 task can start until SPIKE is recorded and D-08 resolved.*
@@ -92,16 +88,18 @@ _Populated during planning. Each PLAN task must map to at least one row here._
 | Real Stooq fallback fires on real yahoo outage | DATA-02 | Cannot reliably force yahoo outage in automation | Temporarily point yahoo-finance2 `.chart()` to invalid URL via env override; run orchestrator; verify `source='stooq'` row appears |
 | 2026 JP holiday (e.g. 2026-05-05 Children's Day) produces market_closed row | DATA-04 | Date-dependent test drifts over time | Run orchestrator with `--as-of 2026-05-05`; verify price_snapshots row has `market_closed=true, source='none'` |
 | TSE timezone boundary: Japanese data is NOT used before 15:00 JST close | DATA-04 | Time-sensitive edge case, PITFALLS #4 | Run orchestrator at 14:59 JST and 15:01 JST on a trading day; verify first skips JP, second includes JP |
+| `/api/cron/fetch-market-data` unauthenticated request reaches handler (proxy.ts bypass works) | DATA-03 | Confirms proxy.ts `/api/cron/*` bypass is still in place | `curl -i -X POST http://localhost:3000/api/cron/fetch-market-data` → expect 401 from handler (not 302 redirect from proxy) |
 
 ---
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references (fixtures, SPIKE script)
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 30s
-- [ ] `nyquist_compliant: true` set in frontmatter (after planner finalizes Per-Task map)
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references (fixtures, SPIKE script)
+- [x] No watch-mode flags
+- [x] Feedback latency < 30s
+- [x] `nyquist_compliant: true` set in frontmatter
+- [x] Per-Task Map aligned with final 11-plan structure
 
-**Approval:** pending
+**Approval:** ready (pending runtime Wave 0 completion)
