@@ -1,0 +1,13 @@
+[
+  {
+    "category": "company",
+    "datetime": 1712000000,
+    "headline": "Apple fixture headline",
+    "id": 1,
+    "image": "",
+    "related": "AAPL",
+    "source": "Fixture",
+    "summary": "Short summary",
+    "url": "https://example.com"
+  }
+]

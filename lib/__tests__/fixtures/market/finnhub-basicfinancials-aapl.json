@@ -1,0 +1,11 @@
+{
+  "metric": {
+    "peBasicExclExtraTTM": 28.5,
+    "epsBasicExclExtraItemsTTM": 6.2,
+    "marketCapitalization": 2800000,
+    "52WeekHigh": 200,
+    "52WeekLow": 150
+  },
+  "series": {},
+  "symbol": "AAPL"
+}
