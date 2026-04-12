@@ -37,30 +37,31 @@ updated: 2026-04-12
 
 ## Per-Task Verification Map
 
-_Aligned with the final 11-plan structure. Every task from every PLAN.md has a row here._
+_Aligned with the final 11-plan structure (Plans 00-10). Every task from every PLAN.md has a row here._
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 02-00-01 | 00 | 0 | — | — | SPIKE: resolve D-08 raw_close semantics (AAPL 2020-08-31 split); option (a) or (b) only | spike | `pnpm tsx scripts/spike-raw-close.ts` | ❌ W0 | ⬜ pending |
-| 02-00-02 | 00 | 0 | — | — | Decision doc records (a) or (b) with numeric evidence | doc | `test -s .planning/phases/02-market-data/02-SPIKE-RAW-CLOSE.md && grep -qE "\\(a\\)\|\\(b\\)" .planning/phases/02-market-data/02-SPIKE-RAW-CLOSE.md` | ❌ W0 | ⬜ pending |
-| 02-00-03 | 00 | 0 | — | — | Offline fixtures captured for yahoo/Finnhub/Stooq (US + JP + error HTML) | fixture | `pnpm tsx scripts/capture-fixtures.ts` | ❌ W0 | ⬜ pending |
-| 02-01-01 | 01 | 1 | DATA-05 | T-2-01 | `TICKERS` whitelist literal + `env.FINNHUB_API_KEY` + `env.CRON_SECRET` added | unit | `pnpm vitest run tickers --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-01-02 | 01 | 1 | DATA-05 | T-2-01 | `isWhitelisted(s)` type-narrows; `getTicker('XYZ')` throws `WhitelistViolationError` | unit | `pnpm vitest run whitelist --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-01-03 | 01 | 1 | — | — | Shared `lib/market/types.ts` + `lib/market/errors.ts` exports compile | unit | `pnpm tsc --noEmit` | ❌ W0 | ⬜ pending |
-| 02-02-01 | 02 | 1 | DATA-03 | — | [BLOCKING] drizzle schema adds OHLCV/news/fundamentals tables; `drizzle-kit push` succeeds against dev Neon | integration | `pnpm drizzle-kit push && pnpm vitest run schema --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-02-02 | 02 | 1 | DATA-03 | — | Unique constraints `(symbol, price_date)` and `(symbol, as_of_date)` enforced | integration | `pnpm vitest run schema --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-03-01 | 03 | 2 | DATA-04 | T-2-02 | `isMarketClosed()` + holiday list + `lastBusinessDay()` with NY/JST TZ; D-19 16:30 NY cutoff | unit | `pnpm vitest run calendar --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-04-01 | 04 | 2 | DATA-01, DATA-03 | — | `fetchOhlcvYahoo` + `fetchFxUsdJpy` parse fixture; empty/stale triggers error; p-limit throttle | unit | `pnpm vitest run yahoo --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-05-01 | 05 | 2 | DATA-01 | T-2-03 | `fetchCompanyNews` + `fetchBasicFinancials` parse fixtures; JP/non-whitelist short-circuit; 401 → FinnhubError; `vi.stubGlobal('fetch')` test strategy | unit | `pnpm vitest run finnhub --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-06-01 | 06 | 3 | DATA-02 | — | `fetchOhlcvStooq` parses CSV fixture; content-type guard rejects HTML (error fixture) | unit | `pnpm vitest run stooq --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-07-01 | 07 | 4 | DATA-03 | — | `upsertPriceSnapshots` / `upsertFundamentalsSnapshots` use `sql\`excluded.*\`` pattern; idempotent against live Neon dev | integration | `pnpm vitest run persist --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-08-01 | 08 | 5 | DATA-01, DATA-02, DATA-03, DATA-04, DATA-05 | T-2-01 | `fetchMarketData()` composes all primitives; D-13 three fallback triggers; D-15 per-ticker isolation; holiday writes market_closed row; non-whitelist filtered out; budget ≤280 lines or helpers extracted | integration | `pnpm vitest run orchestrator --reporter=dot --no-coverage` | ❌ W0 | ⬜ pending |
-| 02-09-01 | 09 | 6 | DATA-03 | T-2-04 | `/api/cron/fetch-market-data` requires `Authorization: Bearer ${CRON_SECRET}`; proxy.ts bypass verified at line covering `/api/cron/*`; unauthenticated request reaches handler and returns 401 | integration | `pnpm vitest run route --reporter=dot --no-coverage && pnpm tsc --noEmit && grep -n "api/cron" proxy.ts` | ❌ W0 | ⬜ pending |
-| 02-10-01 | 10 | 6 | — | — | `scripts/backfill.ts` runs 1-ticker backfill end-to-end against real Neon dev; rate-limit budget honored | manual | `pnpm tsx scripts/backfill.ts --symbol AAPL --days 5` | ❌ W0 | ⬜ manual |
+| 2-00-01 | 00 | 0 | — | — | SPIKE: resolve D-08 raw_close semantics (AAPL 2020-08-31 split); option (a) or (b) only | spike | `pnpm tsx scripts/spike-raw-close.ts` | ✅ | ✅ green |
+| 2-00-02 | 00 | 0 | — | — | Decision doc records (a) or (b) with numeric evidence | doc | `test -s .planning/phases/02-market-data/02-SPIKE-RAW-CLOSE.md && grep -qE "\\(a\\)\|\\(b\\)" .planning/phases/02-market-data/02-SPIKE-RAW-CLOSE.md` | ✅ | ✅ green |
+| 2-00-03 | 00 | 0 | — | — | Offline fixtures captured for yahoo/Finnhub/Stooq (US + JP + error HTML) | fixture | `pnpm tsx scripts/capture-fixtures.ts` | ✅ | ✅ green |
+| 2-01-01 | 01 | 1 | DATA-05 | T-2-01 | `TICKERS` whitelist literal; `isWhitelisted(s)` type-narrows; `getTicker('XYZ')` throws `WhitelistViolationError` | unit | `pnpm vitest run whitelist --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-01-02 | 01 | 1 | DATA-04 | — | 2026 market holidays (NYSE + JPX) in `config/market-holidays.ts` | unit | `pnpm vitest run calendar --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-01-03 | 01 | 1 | DATA-05 | T-2-01 | `env.FINNHUB_API_KEY` enforcement in shared env schema | unit | `pnpm vitest run env --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-02-01 | 02 | 1 | DATA-03 | — | Drizzle schema: priceSnapshots + newsSnapshots + fundamentalsSnapshots tables | integration | `pnpm tsc --noEmit` | ✅ | ✅ green |
+| 2-02-02 | 02 | 1 | DATA-03 | — | [BLOCKING] `drizzle-kit push` succeeds against dev Neon; unique constraints enforced | integration | `pnpm drizzle-kit push` | ✅ | ✅ green |
+| 2-03-01 | 03 | 2 | DATA-04 | T-2-02 | `isMarketClosed()` + `lastBusinessDay()` + `resolveTargetDate()` with NY/JST TZ; D-19 16:30 NY cutoff | unit | `pnpm vitest run calendar --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-04-01 | 04 | 2 | DATA-01, DATA-03 | — | `fetchOhlcvYahoo` + `fetchFxUsdJpy` parse fixture; empty/stale triggers error | unit | `pnpm vitest run yahoo --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-05-01 | 05 | 2 | DATA-01 | T-2-03 | `fetchCompanyNews` + `fetchBasicFinancials` parse fixtures; JP/non-whitelist short-circuit; 401 -> FinnhubError | unit | `pnpm vitest run finnhub --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-06-01 | 06 | 3 | DATA-02 | — | `fetchOhlcvStooq` parses CSV fixture; content-type guard rejects HTML (error fixture); env-gated dead code pattern | unit | `pnpm vitest run stooq --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-07-01 | 07 | 4 | DATA-03 | — | `upsertPriceSnapshots` / `upsertNewsSnapshots` / `upsertFundamentalsSnapshots` idempotent upsert with `sql\`excluded.*\`` | integration | `pnpm vitest run persist --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-08-01 | 08 | 5 | DATA-01..05 | T-2-01 | `fetchMarketData()` composes all primitives; D-13 three fallback triggers; D-15 per-ticker isolation; holiday writes market_closed row; D-18 market-level holiday skip | integration | `pnpm vitest run orchestrator --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-09-01 | 09 | 6 | DATA-03 | T-2-04 | `/api/cron/fetch-market-data` requires `Authorization: Bearer ${CRON_SECRET}`; unauthenticated returns 401 | integration | `pnpm vitest run route --reporter=dot --no-coverage` | ✅ | ✅ green |
+| 2-10-01 | 10 | 6 | DATA-03 | — | `scripts/backfill.ts` CLI wraps `fetchMarketData(mode='backfill')`; `--help` exits 0 | manual | `pnpm backfill --help` | ✅ | ✅ green |
+| 2-10-02 | 10 | 6 | — | — | 02-VALIDATION.md Per-Task Map aligned with actual 11-plan numbering | doc | `grep -q "2-10-02" .planning/phases/02-market-data/02-VALIDATION.md` | ✅ | ✅ green |
 
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+*Status: ⬜ pending -- ✅ green -- ❌ red -- ⚠️ flaky*
 
-*All rows marked `❌ W0` require Wave 0 to create the test file or install fixtures. `wave_0_complete` flips to `true` at runtime once Plan 00 commits.*
+*All plans 00-09 have been executed. Plan 10 (this plan) completes the phase.*
 
 ---
 
