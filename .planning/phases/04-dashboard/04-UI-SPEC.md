@@ -5,6 +5,7 @@ status: draft
 shadcn_initialized: false
 preset: none
 created: 2026-04-12
+revised: 2026-04-12
 ---
 
 # Phase 4 — UI Design Contract
@@ -51,14 +52,15 @@ Exceptions:
 | Role | Size | Weight | Line Height | Font | Usage |
 |------|------|--------|-------------|------|-------|
 | Body | 14px | 400 (regular) | 1.6 | Geist Sans | reasoning テキスト、market_assessment 本文 |
-| Label | 12px | 500 (medium) | 1.4 | Geist Sans | バッジラベル（high/medium/low）、テーブルヘッダー、カード指標名 |
+| Label | 12px | 400 (regular) | 1.4 | Geist Sans | バッジラベル（high/medium/low）、テーブルヘッダー、カード指標名。色差（text-slate-400）で視覚的区別を行う |
 | Heading | 20px | 600 (semibold) | 1.2 | Geist Sans | セクション見出し（「ポートフォリオ推移」等） |
 | Display | 28px | 600 (semibold) | 1.1 | Geist Mono | パフォーマンス指標カードの数値（累計リターン%等） |
 
 **フォント補足:**
 - 数値（パフォーマンス指標、価格、損益）は全て Geist Mono で統一。桁数変動時の横幅ズレを防ぐ
 - Tailwind クラス: `text-sm` (14px), `text-xs` (12px), `text-xl` (20px), `text-3xl` (28px)
-- 重みクラス: `font-normal` (400), `font-medium` (500), `font-semibold` (600)
+- 重みクラス: `font-normal` (400), `font-semibold` (600)
+- **500 (medium) は使用しない。** Label の視覚的区別は `text-xs` + `text-slate-400` の色差で行う
 
 ---
 
@@ -117,6 +119,8 @@ Exceptions:
 - セクション間垂直マージン: 48px (`space-y-12`)
 - レスポンシブブレイクポイント: `lg:` (1024px) でポジションテーブル+パイチャートを横並び。それ未満は縦積み
 
+**Primary focal point:** Section 1 PerformanceGrid の Display 数値（28px Geist Mono）が主視覚アンカー。ユーザーが最初に目を向けるべき情報を最上部・最大フォントサイズで示す。
+
 ---
 
 ## Component Inventory
@@ -154,7 +158,7 @@ Exceptions:
 **カード構造:**
 ```
 <div class="bg-slate-800 rounded-lg p-6">
-  <p class="text-xs font-medium text-slate-400 mb-2">{指標名}</p>
+  <p class="text-xs text-slate-400 mb-2">{指標名}</p>
   <p class="text-3xl font-semibold font-mono {color}">{値}</p>
 </div>
 ```
@@ -227,7 +231,7 @@ Exceptions:
 **日付グループ構造:**
 ```
 <section>
-  <h3>{YYYY年MM月DD日（曜日）}</h3>         — text-sm font-medium text-slate-400
+  <h3>{YYYY年MM月DD日（曜日）}</h3>         — text-sm font-normal text-slate-400
   <p class="market-assessment">{テキスト}</p> — text-sm text-slate-300 bg-slate-800 rounded p-4 mb-4
   [取引なし の場合]
     <p class="text-sm text-slate-500 italic">この日の取引なし</p>
@@ -240,7 +244,7 @@ Exceptions:
 ```
 <div class="bg-slate-800 rounded-lg p-4 mb-3">
   <div class="flex justify-between items-center">
-    <span class="ticker font-mono font-medium text-slate-100">{TICKER}</span>
+    <span class="ticker font-mono text-slate-100">{TICKER}</span>
     <span class="action-badge">{BUY|SELL}</span>      — BUY: bg-blue-900/40 text-blue-400 / SELL: bg-slate-700 text-slate-300
     <span class="confidence-badge">{high|medium|low}</span>
     <span class="font-mono text-slate-300">{quantity}株 @ ¥{price}</span>
@@ -345,6 +349,15 @@ Exceptions:
 | チャートカラー | RESEARCH.md Pattern 2 | blue-400/slate-500/slate-600 |
 | コンポーネント分割 | RESEARCH.md Architecture | ファイル名・責務分割 |
 | フォント | app/layout.tsx | Geist Sans + Geist Mono 既設定 |
+
+---
+
+## Revision History
+
+| Date | Change | Reason |
+|------|--------|--------|
+| 2026-04-12 | Label ウェイトを 500 (medium) → 400 (regular) に変更。font-medium クラスを全箇所から削除 | Dimension 4 BLOCK: フォントウェイト3種→2種に削減 |
+| 2026-04-12 | Layout Contract に "Primary focal point" 宣言を追加 | Dimension 2 FLAG: 主画面の focal point 未宣言を解消 |
 
 ---
 
