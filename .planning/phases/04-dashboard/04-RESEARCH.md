@@ -545,19 +545,19 @@ function ConfidenceBadge({ confidence }: { confidence: 'high' | 'medium' | 'low'
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **`lightweight-charts-react-wrapper` のバージョン不一致**
+1. **RESOLVED: `lightweight-charts-react-wrapper` のバージョン不一致**
    - What we know: CLAUDE.md は `^3` と記載。npm registryの最新は `2.1.1`。CLAUDE.md作成当時は `^3` が予告されていた可能性がある
    - What's unclear: `3.x` が既にリリースされているか、開発中か
    - Recommendation: `npm install lightweight-charts-react-wrapper` でインストールし、インストールされたバージョンを確認。`2.1.1` がインストールされた場合は `Chart` / `LineSeries` のimportを `lightweight-charts-react-wrapper` から行う。代替として公式advancedexampleのコンテキストパターンを自作する
 
-2. **"もっと見る" のオフセット管理をClient Componentで行うか、Route Handlerに任せるか**
+2. **RESOLVED: "もっと見る" のオフセット管理をClient Componentで行うか、Route Handlerに任せるか**
    - What we know: 初期20件はServer Componentで取得。追加読み込みはインタラクティブなので Client Componentが必要
    - What's unclear: Route Handler `/api/dashboard/timeline?offset=N` を作るか、Server Actionsを使うか
    - Recommendation: Route Handler パターン（既存の `/api/cron/*` と同じ）が既確立のため採用。Server Actionsはフォーム用途向きで、GETデータフェッチには不適切
 
-3. **positions テーブルの現在価格取得**
+3. **RESOLVED: positions テーブルの現在価格取得**
    - What we know: `positions.avgCost` は取得平均。現在価格は `priceSnapshots` から最新日の `close` を引く必要がある
    - What's unclear: JPとUSで最終営業日が異なる場合の最新日選択方法
    - Recommendation: `marketClosed = false` でフィルタし、各銘柄ごとに最新の `priceDate` を1件取得するサブクエリまたはウィンドウ関数を使う
