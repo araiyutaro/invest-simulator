@@ -801,27 +801,12 @@ export const config = {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **CSP の `'unsafe-inline'` 許容 vs nonce 方式**
-   - 分かっていること: Phase 5 は nonce 非採用が実装量的に現実的
-   - 不明な点: user が「CSP は厳格にしたい」と言った場合どうするか
-   - 推奨: Plan フェーズで user に確認。回答がなければ `'unsafe-inline'` ありで初期版、nonce は deferred
-
-2. **HSTS `preload` を入れるか**
-   - 分かっていること: preload は撤回不可で慎重に入れるべき
-   - 不明な点: 本番ドメインが `*.vercel.app` か独自ドメインか
-   - 推奨: `*.vercel.app` なら preload 不可（vercel.app 全体が既に preloaded）、独自ドメインでも Phase 5 は preload なしで進める
-
-3. **Neon 最小権限の accepted risk 化**
-   - 分かっていること: Free tier で role 分離は現実的でない
-   - 不明な点: user が「やっぱり厳格にやる」と言ったら Paid tier upgrade 必要
-   - 推奨: SECURITY-CHECKLIST に accepted risk として明記、必要なら v2 で再検討
-
-4. **Phase 2 で追加された可能性のある環境変数**
-   - 分かっていること: lib/env.ts には 6 変数のみ
-   - 不明な点: fetchMarketData の Stooq fallback / yahoo-finance2 が暗黙的に何か要求していないか
-   - 推奨: Plan 内で grep タスクを実行して実コードと env.ts の差分を出す
+1. **CSP の `'unsafe-inline'` 許容 vs nonce 方式** — RESOLVED: Plan 05-02 で `'unsafe-inline'` ありの初期版を採用、nonce 化は deferred (CONTEXT.md D-13 §7 + Plan 05-02 threat_model AR-2 として記録)。
+2. **HSTS `preload` を入れるか** — RESOLVED: Plan 05-02 で `preload` 非採用 (RESEARCH.md §Pitfall 6 — 撤回不可リスクを回避、AR-3 として 05-VERIFICATION で accepted risk 登記)。
+3. **Neon 最小権限の accepted risk 化** — RESOLVED: Plan 05-04 (SECURITY-CHECKLIST.md) §6 で "Neon Free tier 単一 role のため accepted risk、Paid tier 移行時に再検討" として明記 (AR-1)。
+4. **Phase 2 で追加された可能性のある環境変数** — RESOLVED: Plan 05-03 Task 2 で `grep -r "process.env\." lib/ app/` による実コード監査ステップを実行し、結果を `.env.example` に反映する手順を定義。
 
 ---
 
