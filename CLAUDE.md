@@ -70,8 +70,8 @@
 ### Charting
 | Library | Version | Purpose | Why |
 |---------|---------|---------|-----|
-| **lightweight-charts** (TradingView) | ^5 | Portfolio equity curve, individual stock OHLCV candlestick | 45 KB gzipped vs Chart.js 180 KB. Purpose-built for financial time series. Renders canvas not SVG — handles 1–2 years of daily bars without DOM thrash |
-| **lightweight-charts-react-wrapper** | ^3 | React component wrapper for lightweight-charts | Provides declarative React API (`ChartContainer`, `LineSeries`, `CandlestickSeries`) compatible with Next.js App Router via `"use client"` boundary |
+| **lightweight-charts** (TradingView) | ^4.2 | Portfolio equity curve, individual stock OHLCV candlestick | 45 KB gzipped vs Chart.js 180 KB. Purpose-built for financial time series. Renders canvas not SVG — handles 1–2 years of daily bars without DOM thrash. NOTE: pinned to v4 because the only maintained React wrapper (`lightweight-charts-react-wrapper@2.1.1`) still uses the v4 `addLineSeries()` API which was removed in v5. |
+| **lightweight-charts-react-wrapper** | ^2.1 | React component wrapper for lightweight-charts | Provides declarative React API (`ChartContainer`, `LineSeries`, `CandlestickSeries`) compatible with Next.js App Router via `"use client"` boundary. Max published version is 2.1.1; must pair with lightweight-charts ^4. |
 | **Recharts** | ^2.15 | Secondary charts: pie/bar for allocation, win-rate histogram | SVG-based React-native charting. Fine for low-data-point charts (e.g. 10-sector allocation). Do NOT use for time series with daily data |
 ### Scheduling
 | Option | Cost | Precision | Limitations | Verdict |
@@ -95,8 +95,8 @@
 | `date-fns` | ^4 | Date arithmetic | Market calendar logic (skip weekends, holidays), sliding windows for Sharpe calculation |
 | `iron-session` | ^8 | Session management | Password-protection middleware |
 | `technicalindicators` | ^3.1 | TA indicators | RSI, MACD, SMA/EMA for Claude context |
-| `lightweight-charts` | ^5 | Financial charts | Time-series charting |
-| `lightweight-charts-react-wrapper` | ^3 | React bindings | Wraps lightweight-charts for App Router components |
+| `lightweight-charts` | ^4.2 | Financial charts | Time-series charting (pinned to v4 — wrapper v2 is not compatible with v5 API) |
+| `lightweight-charts-react-wrapper` | ^2.1 | React bindings | Wraps lightweight-charts for App Router components |
 | `recharts` | ^2.15 | General charts | Allocation pie, histogram |
 | `yahoo-finance2` | ^3.14 | JP + US market data | Server-side only (CORS restrictions); call from Route Handlers |
 | `@anthropic-ai/sdk` | ^0.81 | Claude API | Daily trading decision batch |
@@ -154,7 +154,7 @@
 | Next.js 16.2.3 | React 19.2.4 | Already installed and compatible |
 | Drizzle ORM ^0.41 | `@neondatabase/serverless` latest | Official Neon adapter for Drizzle documented |
 | iron-session ^8 | Next.js App Router | v8 specifically rewrote for App Router `cookies()` API |
-| lightweight-charts ^5 | React 19 via `lightweight-charts-react-wrapper` ^3 | Must use `"use client"` directive; canvas rendering, no SSR |
+| lightweight-charts ^4.2 | React 19 via `lightweight-charts-react-wrapper` ^2.1 | Must use `"use client"` directive; canvas rendering, no SSR. Wrapper v2 uses the v4 `addLineSeries()` API — pairing with lightweight-charts v5 crashes at runtime |
 | `@anthropic-ai/sdk` ^0.81 | Node.js 18+, Next.js Route Handlers | Streams supported; works in serverless |
 ## Sources
 - [Finnhub rate limits](https://finnhub.io/docs/api/rate-limit) — verified 60 calls/min free tier; JP requires paid

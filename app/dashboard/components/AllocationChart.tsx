@@ -94,8 +94,8 @@ export function AllocationChart({ data }: Props) {
             data={chartData}
             dataKey="value"
             nameKey="name"
-            innerRadius={60}
-            outerRadius={100}
+            innerRadius="60%"
+            outerRadius="90%"
             stroke="#0f172a"
           >
             {chartData.map((slice, index) => (
