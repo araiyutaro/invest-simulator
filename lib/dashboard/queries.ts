@@ -61,20 +61,58 @@ export function parseTimelineFromDecision(transcript: unknown): ParsedTimeline {
     return { marketAssessment: '', trades: [] }
   }
 
+  // Two supported shapes:
+  //   1) Flat: `{ market_assessment, decisions[] }` — used by unit tests and
+  //      any future pipelines that store the parsed response directly.
+  //   2) Wrapped (real Phase 3 pipeline): `{ raw_messages: [..., { role:'model',
+  //      content: '<JSON string>' }] }` — Gemini's structured response is kept
+  //      inside the LLM message log rather than hoisted to top level.
+  //
+  // Fall back to shape 2 only when shape 1 is absent, so both keep working.
   const t = transcript as {
     market_assessment?: unknown
     decisions?: unknown
+    raw_messages?: unknown
+  }
+
+  let marketAssessmentRaw: unknown = t.market_assessment
+  let decisionsRaw: unknown = t.decisions
+
+  if (
+    (typeof marketAssessmentRaw !== 'string' || !Array.isArray(decisionsRaw)) &&
+    Array.isArray(t.raw_messages)
+  ) {
+    for (const msg of t.raw_messages as Array<{ role?: unknown; content?: unknown }>) {
+      if (!msg || typeof msg !== 'object') continue
+      if (msg.role !== 'model' && msg.role !== 'assistant') continue
+      if (typeof msg.content !== 'string') continue
+      try {
+        const parsed = JSON.parse(msg.content) as {
+          market_assessment?: unknown
+          decisions?: unknown
+        }
+        if (typeof parsed.market_assessment === 'string') {
+          marketAssessmentRaw = parsed.market_assessment
+        }
+        if (Array.isArray(parsed.decisions)) {
+          decisionsRaw = parsed.decisions
+        }
+        break
+      } catch {
+        // Malformed model message; ignore and keep scanning.
+      }
+    }
   }
 
   const marketAssessment =
-    typeof t.market_assessment === 'string' ? t.market_assessment : ''
+    typeof marketAssessmentRaw === 'string' ? marketAssessmentRaw : ''
 
-  if (!Array.isArray(t.decisions)) {
+  if (!Array.isArray(decisionsRaw)) {
     return { marketAssessment, trades: [] }
   }
 
   const result: TimelineTrade[] = []
-  for (const raw of t.decisions as RawDecisionEntry[]) {
+  for (const raw of decisionsRaw as RawDecisionEntry[]) {
     if (raw == null || typeof raw !== 'object') continue
 
     const action = raw.action

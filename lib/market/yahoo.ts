@@ -1,8 +1,12 @@
 import 'server-only'
-import yahooFinance from 'yahoo-finance2'
+import YahooFinance from 'yahoo-finance2'
 import { getTicker } from './whitelist'
 import { YahooError } from './errors'
 import type { OhlcvRow } from './types'
+
+// yahoo-finance2 v3 dropped the shared default-export instance. Consumers must
+// construct their own client. One module-level instance is reused for all calls.
+const yahooFinance = new YahooFinance()
 
 // Exported for test injection (vi.spyOn) — do not use elsewhere.
 export const _yahooClient = yahooFinance
