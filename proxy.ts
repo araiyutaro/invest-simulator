@@ -36,7 +36,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Exclude only Next.js static/image optimization assets and the favicon.
-  // Everything else — including /api routes — flows through the auth gate.
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  // Exclude Next.js static/image optimization assets, favicon, and metadata
+  // files (sitemap.xml, robots.txt). Everything else — including /api routes —
+  // flows through the auth gate. (Phase 05 Plan 03, D-14 preserved)
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'],
 }
