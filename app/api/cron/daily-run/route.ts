@@ -25,10 +25,11 @@ import type { DecisionTranscript } from '@/db/schema'
 export const maxDuration = 120
 
 // ---------------------------------------------------------------------------
-// POST — 日次エージェント実行
+// handleDailyRun — 共有実装本体（Phase 05 Plan 01 で POST 本体から抽出）
+// Phase 05 Plan 01 / D-01: GET added for Vercel Cron (Pitfall 1 fix)
 // ---------------------------------------------------------------------------
 
-export async function POST(request: NextRequest) {
+async function handleDailyRun(request: NextRequest): Promise<NextResponse> {
   // 1. CRON_SECRET 認証（fetch-market-data/route.ts パターン転用）
   const header = request.headers.get('authorization') ?? ''
   const expected = `Bearer ${env.CRON_SECRET}`
@@ -190,9 +191,19 @@ export async function POST(request: NextRequest) {
 }
 
 // ---------------------------------------------------------------------------
-// GET — 405 Method Not Allowed
+// GET — Vercel Cron entry point
+// Vercel Cron invokes this route with GET + Authorization: Bearer $CRON_SECRET
+// [CITED: vercel.com/docs/cron-jobs/manage-cron-jobs#securing-cron-jobs]
 // ---------------------------------------------------------------------------
 
-export async function GET() {
-  return NextResponse.json({ error: 'method_not_allowed' }, { status: 405 })
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  return handleDailyRun(request)
+}
+
+// ---------------------------------------------------------------------------
+// POST — 手動 curl / デバッグ起動用
+// ---------------------------------------------------------------------------
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  return handleDailyRun(request)
 }
