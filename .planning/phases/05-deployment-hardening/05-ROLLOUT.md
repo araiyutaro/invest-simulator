@@ -33,8 +33,9 @@ Reusable on subsequent deploys (steps 1-2 only on first deploy; 3-7 every time).
 - Run `vercel link` CLI (D-08: dashboard only)
 - Enable Vercel Deployment Protection (D-06: iron-session only)
 
-**Status:** ⬜ pending
-**Date:** —
+**Status:** ✅ done
+**Date:** 2026-04-14
+**Production URL:** https://invest-simulator-rosy.vercel.app/
 
 ---
 
@@ -69,9 +70,9 @@ with correct scope badges.
 - Enable CRON_SECRET on Preview (Pitfall 8)
 - Prefix anything with `NEXT_PUBLIC_` (D-21)
 
-**Status:** ⬜ pending
-**Date:** —
-**Notes:** record the last-rotation date for SESSION_SECRET here (D-09 annual rotation)
+**Status:** ✅ done
+**Date:** 2026-04-14
+**Notes:** record the last-rotation date for SESSION_SECRET here (D-09 annual rotation) — initial registration 2026-04-14
 
 ---
 
@@ -95,9 +96,9 @@ git push origin master
 - Check build log for env var zod errors (missing var in Dashboard → fix Step 2)
 - Check for `vercel.json` schema errors (fix JSON, re-push)
 
-**Status:** ⬜ pending
-**Date:** —
-**Production URL:** `https://<your-domain>.vercel.app`
+**Status:** 🔄 in-progress (git push done 2026-04-14; awaiting Vercel build Ready)
+**Date:** 2026-04-14
+**Production URL:** https://invest-simulator-rosy.vercel.app/
 
 ---
 
