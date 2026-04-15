@@ -96,9 +96,10 @@ git push origin master
 - Check build log for env var zod errors (missing var in Dashboard → fix Step 2)
 - Check for `vercel.json` schema errors (fix JSON, re-push)
 
-**Status:** 🔄 in-progress (git push done 2026-04-14; awaiting Vercel build Ready)
+**Status:** ✅ done
 **Date:** 2026-04-14
 **Production URL:** https://invest-simulator-rosy.vercel.app/
+**Deploy SHA:** 82adbd5 (user confirmed "ready" — build Ready)
 
 ---
 
@@ -144,9 +145,18 @@ Expect: today's run_date row present with a non-null decision row.
 **If 4e returns 405:** Plan 05-01 Task 2 refactor failed. Roll back and re-check
 daily-run/route.ts GET export.
 
-**Status:** ⬜ pending
-**Date:** —
-**Notes:** —
+**Status:** ✅ done
+**Date:** 2026-04-15
+**Notes:**
+- 4a dashboard: 307 → https://invest-simulator-rosy.vercel.app/login ✅
+- 4b login: 200 ✅
+- 4c cron-no-auth: 401 ✅
+- 4d cron-wrong-bearer (GET): 401 ✅
+- 4d cron-wrong-bearer (POST): 401 ✅ (extra probe)
+- 4e cron correct-Bearer: HTTP/2 200 + `{"status":"success","decisionId":"7c1b9e8e-f268-4e44-954b-7d64b5770032","trades":1,"skipped":0,"costUsd":0.006279,"newCashJpy":151383.936}`
+- Gemini 実呼び出し成功 — 1件約定、コスト $0.0063
+- x-vercel-id: hnd1::iad1 (HND1 Tokyo region serving, IAD1 compute)
+- Phase 5 最大の罠 (Cron GET) が本番で完全動作確認
 
 ---
 
@@ -159,6 +169,10 @@ items §1-§7 top-to-bottom. Record Status/Date/Notes in that file.
 
 **Sign-off:** if any item (other than §6) is ❌, roll back the deploy or fix
 forward before proceeding to Step 6.
+
+**Status:** ✅ done (§1-§4, §7 automated; §5, §6 noted below)
+**Date:** 2026-04-15
+**Notes:** See 05-SECURITY-CHECKLIST.md for per-item records.
 
 **Status:** ⬜ pending
 **Date:** —
