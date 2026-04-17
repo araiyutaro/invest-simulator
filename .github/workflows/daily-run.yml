@@ -1,0 +1,36 @@
+name: Daily Trading Run
+
+on:
+  schedule:
+    # UTC 22:00 = JST 07:00 — after US market close
+    - cron: '0 22 * * *'
+  workflow_dispatch: # Allow manual trigger from GitHub Actions UI
+
+jobs:
+  trigger-daily-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger daily run
+        env:
+          DOMAIN: ${{ secrets.VERCEL_PRODUCTION_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          echo "Triggering daily run at $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$DOMAIN/api/cron/daily-run")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "Status: $HTTP_CODE"
+          echo "Response: $BODY"
+
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "::error::Daily run failed with status $HTTP_CODE"
+            exit 1
+          fi
+
+          echo "Daily run completed successfully"
