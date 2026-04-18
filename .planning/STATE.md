@@ -1,16 +1,15 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0
-milestone_name: milestone
-status: executing
-stopped_at: Phase 5 context gathered
-last_updated: "2026-04-13T08:47:38.191Z"
-last_activity: 2026-04-12 -- Phase 04 execution started
+milestone_name: MVP
+status: completed
+last_updated: "2026-04-18"
+last_activity: 2026-04-18 -- v1.0 milestone completed
 progress:
   total_phases: 5
-  completed_phases: 4
-  total_plans: 24
-  completed_plans: 24
+  completed_phases: 5
+  total_plans: 30
+  completed_plans: 30
   percent: 100
 ---
 
@@ -18,68 +17,29 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-11)
+See: .planning/PROJECT.md (updated 2026-04-18)
 
-**Core value:** 毎日のClaudeの売買判断と「なぜそう考えたか」の理由を読むことで、投資の思考プロセスを学べること
-**Current focus:** Phase 04 — dashboard
+**Core value:** 毎日のAIの売買判断と「なぜそう考えたか」の理由を読むことで、投資の思考プロセスを学べること
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 04 (dashboard) — EXECUTING
-Plan: 1 of 4
-Status: Executing Phase 04
-Last activity: 2026-04-12 -- Phase 04 execution started
+Milestone v1.0 MVP shipped on 2026-04-18.
+5 phases, 30 plans completed.
 
-Progress: [░░░░░░░░░░] 0%
-
-## Performance Metrics
-
-**Velocity:**
-
-- Total plans completed: 11
-- Average duration: —
-- Total execution time: 0 hours
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 02 | 11 | - | - |
-
-**Recent Trend:**
-
-- Last 5 plans: —
-- Trend: —
-
-*Updated after each plan completion*
-| Phase 01-foundation P01 | 15 | 3 tasks | 4 files |
-| Phase 01-foundation P05 | ~15m | 3 tasks | 6 files |
-| Phase 01 P04 | 8min | 2 tasks | 3 files |
+Next step: `/gsd-new-milestone` to define v1.1 goals.
 
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- Phase 1: AI Layer = `@google/generative-ai` + `gemini-2.5-flash` で確定（Plan 01-05 SPIKE, 2026-04-11）
-- Phase 1: Vercel Fluid Compute の実際のタイムアウト上限を実測確認が必要（IMPORTANT）
-- [Phase 01-foundation]: D-01..D-06 enforced in db/schema.ts; SEC-03 enforced via server-only guard in db/index.ts; drizzle-kit push pattern adopted over generate/migrate for personal project
-- [Phase 01-foundation]: AI Layer confirmed: @google/generative-ai v0.24.1 + gemini-2.5-flash (Plan 01-05 SPIKE)
-- [Phase 01]: proxy.ts at project root with /api/auth/* and /api/cron/* bypass (Plan 04, D-14)
+All decisions logged in PROJECT.md Key Decisions table.
+See: .planning/milestones/v1.0-ROADMAP.md for full v1.0 history.
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-- **Vercel タイムアウト矛盾**: PITFALLS.md は60秒制限、ARCHITECTURE.md は Fluid Compute で300秒可能と記載。Phase 3 Agent Pipeline の実ツール統合時に実測して確定する
-- **Vercel Preview での AI Layer 動作確認**: ローカル実測は完了、Preview 実測は未実施（Plan 01-05 human-action checkpoint 残存）。Plan 04 middleware 完了後 or Phase 3 開始時の実ルートで自動的にカバーされる見込み
-
-## Session Continuity
-
-Last session: 2026-04-13T08:47:38.187Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-deployment-hardening/05-CONTEXT.md
+None — milestone shipped.
