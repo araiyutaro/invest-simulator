@@ -66,6 +66,11 @@
 | 現物ロングのみ | 思考プロセスの観察に集中、複雑性を抑える | — Pending |
 | クラウドデプロイ + 簡易パスワード | どこからでも閲覧、最低限の保護 | — Pending |
 | Next.js継続使用 | 既にブートストラップ済み、再構築を避ける | — Pending |
+| 05-AR-1: Neon Free tier single-role (no DB RBAC) | SECURITY-CHECKLIST §6; operator-level access control sufficient for personal project | ⚠️ Accepted Risk — Phase 5 |
+| 05-AR-2: Cron precision ±59 min (Vercel) / ±few min (GitHub Actions) | JST morning run is non-time-critical for daily batch | ⚠️ Accepted Risk — Phase 5 |
+| 05-AR-3: CSP uses `'unsafe-inline'` for script/style | Next.js RSC + Tailwind v4 requirement; nonce-based CSP deferred | ⚠️ Accepted Risk — Phase 5 |
+| 05-AR-4: HSTS without `preload` | Pitfall 6: preload is irrevocable; re-enable when domain is permanent | ⚠️ Accepted Risk — Phase 5 |
+| 05-AR-5: No Inngest/QStash fallback for 120s overflow | D-11: address only on actual incident (current ~58s) | ⚠️ Accepted Risk — Phase 5 |
 
 ## Evolution
 

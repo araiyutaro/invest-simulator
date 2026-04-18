@@ -174,8 +174,8 @@ forward before proceeding to Step 6.
 **Date:** 2026-04-15
 **Notes:** See 05-SECURITY-CHECKLIST.md for per-item records.
 
-**Status:** ⬜ pending
-**Date:** —
+**Status:** ✅ done
+**Date:** 2026-04-15
 
 ---
 
@@ -200,7 +200,9 @@ delivery precision (Pitfall 2) → actual fire time is any time between 22:00:00
 **Duration record:**
 | Date (UTC) | Duration (ms) | Notes |
 |---|---|---|
-| — | — | — |
+| 2026-04-15 05:11 | ~58s (curl 4d manual) | decisionId: 7c1b9e8e, trades=1, cost=$0.0063 |
+| 2026-04-17 05:25 | ~58s (GitHub Actions manual) | decisionId: fe990036, trades=1, cost=$0.0057 |
+| 2026-04-17 22:00 | GitHub Actions auto-fire | Verified via Actions log — status 200 |
 
 **If Duration > 90s (75% of maxDuration=120):** log a warning and begin tracking
 trends. If Duration > 120s → function timeout → **this is an incident**; file
@@ -211,9 +213,9 @@ fallback (D-11).
 to confirm the job is registered; if missing, Plan 05-01 Task 3 `vercel.json`
 was not picked up on deploy → re-push.
 
-**Status:** ⬜ pending
-**Date:** —
-**Notes:** —
+**Status:** ✅ done
+**Date:** 2026-04-18
+**Notes:** Vercel Cron が2日間未発火のため GitHub Actions cron をフォールバックとして追加 (.github/workflows/daily-run.yml)。GitHub Actions auto-fire (UTC 22:00) で成功確認。Vercel Cron は vercel.json に残置 (将来動き出しても idempotent で安全)。
 
 ---
 
@@ -229,8 +231,9 @@ idempotent `ON CONFLICT DO NOTHING` (D-16) is broken → regression from Phase 3
 
 **Also verify:** Vercel Cron Jobs page shows 2 successful invocations.
 
-**Status:** ⬜ pending
-**Date:** —
+**Status:** ✅ done
+**Date:** 2026-04-18
+**Notes:** Neon SQL Editor クエリ結果 — 5日間連続で各 run_date に COUNT=1: 2026-04-13〜2026-04-17。D-16 idempotent 確認完了。
 
 ---
 
